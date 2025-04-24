@@ -8,11 +8,14 @@
 </head>
 <body>
     <div class="container">
+
         <header>
             <img src="/static/logo.png" alt="Logo" class="logo">
             <h1>Lyrics Extractor</h1>
         </header>
+
         <main>
+
             <form id="upload-form" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="file">Choose an MP3 file:</label>
@@ -28,6 +31,7 @@
                 </div>
                 <button type="submit">Extract Lyrics</button>
             </form>
+            
             <div id="result">
                 <h2>Extracted Lyrics:</h2>
                 <pre id="lyrics"></pre>
