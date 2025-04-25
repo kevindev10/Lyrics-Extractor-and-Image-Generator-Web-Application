@@ -13,6 +13,7 @@ import speech_recognition as sr
 import requests
 import google.generativeai as genai
 from schemas import LyricsPayload
+from utils import convert_mp3_to_wav, split_audio, transcribe_audio_chunk, transcribe_wav_to_text, summarize_text
 
 
 
@@ -51,7 +52,7 @@ async def read_root():
 
 
 @app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...), prompt: str = Form(...)):
+async def create_upload_file(file: UploadFile = File(...), language: str = Form(...)):
     if not os.path.exists("uploads"):
         os.makedirs("uploads")
 
@@ -62,4 +63,21 @@ async def create_upload_file(file: UploadFile = File(...), prompt: str = Form(..
     #AUDIO PROCESSING
     wav_file_location = f"converted_files/{file.filename.replace('.mp3', '.wav')}"
 
-    #TODO : CONVERT .MP3 TO .WAV
+    convert_mp3_to_wav(file_location, wav_file_location)
+
+    lyrics = transcribe_wav_to_text(wav_file_location)
+
+    os.remove(file_location)
+
+    summary = await summarize_text(lyrics)
+
+    return {"lyrics": lyrics, "summary": summary}
+
+
+
+
+@app.post("/generate-image/")
+async def generate_image(payload: LyricsPayload):
+    pass
+    # TODO: Implement the image generation logic using the lyrics provided in the payload
+    
